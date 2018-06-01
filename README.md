@@ -1,6 +1,4 @@
-<<<<<<< .mine
-
-1——2018-05-30 问题：<scroll-view>组件中的事件，scrolltoupper 、scrolltolower事件在wepy中不会触发。
+﻿1——2018-05-30 问题：<scroll-view>组件中的事件，scrolltoupper 、scrolltolower事件在wepy中不会触发。
     解决办法：原因不明，没查到此同样的问题，弃用<scroll-view>组件，改用<view>及onPageScroll事件。
 
 
@@ -70,76 +68,3 @@
     }
 
 3——2018-06-01 问题:
-=======
-# wepy-mall
-学一下小程序，朋友推荐用wepy框架，顺带一起学了
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> .theirs
