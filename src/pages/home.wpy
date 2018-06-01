@@ -1,0 +1,133 @@
+<style scoped lang="less">
+  .container{
+    position: relative;
+  }
+  .logo{
+    width: 750rpx;
+    height: 130rpx;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    image{
+      display: block;
+      width: 80rpx;
+      height: 80rpx;
+      margin: 20rpx auto 0;
+    }
+  }
+  .swiper{
+    width: 750rpx;
+    height: 750rpx;
+  }
+  .adImg{
+    width: 750rpx;
+    height: 750rpx;
+  }
+  .nav-list{
+    width: 653rpx;
+    display: flex;
+    justify-content: space-between;
+    padding: 17rpx 50rpx;
+    position: absolute;
+    top: 735rpx;
+    border-top-left-radius: 80rpx 15rpx;
+    border-top-right-radius: 80rpx 15rpx;
+    background: #fff;
+    font-size: 26rpx;
+    text-align: center;
+    .nav_icon {
+      height: 80rpx;
+      margin: 0 auto;
+      width: 80rpx;
+      margin-bottom: 14rpx;
+    }
+  }
+  .group-buy{
+    margin-top: 178rpx;
+    background: #fff;
+    height: 600rpx;
+  }
+  .sale{
+    margin-top: 25rpx;
+    background: #fff;
+    height: 600rpx;
+  }
+  .special{
+    margin-top: 25rpx;
+    background: #fff;
+    height: 600rpx;
+  }
+  .recom{
+    margin-top: 25rpx;
+    background: #fff;
+    height: 600rpx;
+  }
+</style>
+<template>
+  <view class="container">
+    <view class="logo" hidden="{{isHidden}}"><image src="../images/logo.png"/></view>
+    <swiper class="swiper" indicator-dots autoplay indicator-active-color="{{indicatorActiveColor}}" 
+    interval="{{interval}}" duration="{{duration}}" circular="{{circular}}">
+      <block wx:for="{{adList}}" wx:key="key">
+        <swiper-item>
+          <image src="{{item.path}}" class="adImg"/>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="nav-list">
+      <navigator url='signin' open-type='navigate'>
+        <image src="../images/icon_nav_01_new.png" class="nav_icon" />
+        <view class="nav_text">签到</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/exchange_goods">
+        <image src="../images/icon_nav_02_new.png" class="nav_icon" />
+        <view class="nav_text">礼券</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/wholesale">
+        <image src="../images/icon_nav_03_new.png" class="nav_icon" />
+        <view class="nav_text">折扣</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/replenishment_goods">
+        <image src="../images/icon_nav_04_new.png" class="nav_icon" />
+        <view class="nav_text">专栏</view>
+      </navigator>
+    </view>
+    <view class="group-buy"></view>
+    <view class="sale"></view>
+    <view class="special"></view>
+    <view class="recom"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import analogData from '../data/data.js'
+
+  export default class Index extends wepy.page {
+    data = {
+      isHidden: true,
+      indicatorDots: true,
+      indicatorActiveColor: '#fff',
+      interval: 3000,
+      duration: 1000,
+      circular: true,
+      adList: analogData.adData
+    }
+
+    methods = {
+      onPageScroll(e) {
+        if (e.scrollTop >= 220) {
+          this.isHidden = false
+        }
+        if (e.scrollTop < 220) {
+          this.isHidden = true
+        }
+      }
+    }
+
+    onLoad() {
+      console.log('onLoad')
+    }
+  }
+</script>

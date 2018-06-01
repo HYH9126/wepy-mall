@@ -1,0 +1,22 @@
+<style scoped lang="less">
+</style>
+<template>
+  <view class="container">
+    购物车
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Shopping extends wepy.page {
+    config = {
+      window: {
+        navigationStyle: 'custom'
+      }
+    }
+    onLoad() {
+      console.log('onLoad')
+    }
+  }
+</script>

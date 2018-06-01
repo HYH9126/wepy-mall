@@ -1,0 +1,22 @@
+<style scoped lang="less">
+</style>
+<template>
+  <view class="container">
+    签到
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Signin extends wepy.page {
+    config = {
+      window: {
+        navigationStyle: 'custom'
+      }
+    }
+    onLoad() {
+      console.log('onLoad')
+    }
+  }
+</script>
