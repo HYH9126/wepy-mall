@@ -24,7 +24,7 @@
     width: 750rpx;
     height: 750rpx;
   }
-  .nav-list{
+  .navList{
     width: 653rpx;
     display: flex;
     justify-content: space-between;
@@ -43,44 +43,55 @@
       margin-bottom: 14rpx;
     }
   }
-  .group-buy{
+  .block view:first-child{
+    background-color: #fff;
+  }
+  .groupBuy{
     margin-top: 178rpx;
-    background: #fff;
-    height: 600rpx;
   }
   .sale{
     margin-top: 25rpx;
-    background: #fff;
-    height: 600rpx;
   }
   .special{
     margin-top: 25rpx;
-    background: #fff;
-    height: 600rpx;
   }
   .recom{
     margin-top: 25rpx;
-    background: #fff;
-    height: 600rpx;
+  }
+  .title{
+    text-align: center;
+    padding: 20rpx 0;
+    text{
+      vertical-align: middle;
+      font-size: 34rpx;
+      height: 34rpx;
+      line-height: 34rpx;
+    }
+    image{
+      vertical-align: middle;
+      margin-left: 6rpx;
+      width: 50rpx;
+      height: 50rpx;
+    }
   }
 </style>
 <template>
   <view class="container">
-    <view class="logo" hidden="{{isHidden}}"><image src="../images/logo.png"/></view>
+    <view class="logo" hidden="{{isHiddenLogo}}"><image src="../images/logo.png"/></view>
     <swiper class="swiper" indicator-dots autoplay indicator-active-color="{{indicatorActiveColor}}" 
     interval="{{interval}}" duration="{{duration}}" circular="{{circular}}">
-      <block wx:for="{{adList}}" wx:key="key">
+      <navigator wx:for="{{adList}}" wx:key="key" open-type="navigate" url="/pages/goodsdetail?code={{item.id}}" >
         <swiper-item>
-          <image src="{{item.path}}" class="adImg"/>
+          <image src="{{item.image[0]}}" class="adImg"/>
         </swiper-item>
-      </block>
+      </navigator>
     </swiper>
-    <view class="nav-list">
-      <navigator url='signin' open-type='navigate'>
+    <view class="navList">
+      <navigator url='signin' open-type="navigate" >
         <image src="../images/icon_nav_01_new.png" class="nav_icon" />
         <view class="nav_text">签到</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/exchange_goods">
+      <navigator url='ticket' open-type="navigate" >
         <image src="../images/icon_nav_02_new.png" class="nav_icon" />
         <view class="nav_text">礼券</view>
       </navigator>
@@ -93,41 +104,160 @@
         <view class="nav_text">专栏</view>
       </navigator>
     </view>
-    <view class="group-buy"></view>
-    <view class="sale"></view>
-    <view class="special"></view>
-    <view class="recom"></view>
+    <view class="groupBuy block">
+      <view class="title">
+        <text>拼团特惠</text>
+        <image src="../images/more.png" />
+      </view>
+      <groupA :list.sync="groupBuyList"></groupA>
+    </view>
+    <view class="sale block">
+      <view class="title">
+        <text>限量折扣</text>
+        <image src="../images/more.png" />
+      </view>
+      <saleA :list.sync="saleList"></saleA>
+    </view>
+    <view class="special block">
+      <view class="title">
+        <text>精选专题</text>
+        <image src="../images/more.png" />
+      </view>
+      <specialA :list.sync="specialList"></specialA>
+    </view>
+    <view class="recom block">
+      <view class="title">
+        <text>人气推荐</text>
+        <image src="../images/more.png" />
+      </view>
+      <recomA :list.sync="recomList"></recomA>
+    </view>
+    <!--加载更多时动画-->
+    <loading :isHiddenLoad.sync="hiddenLoading" message="加载中" :top.sync="top"></loading>
+    <!--没有更多数据时的占位块-->
+    <empty :isHiddenEmpty.sync="hiddenEmpty" message="没有更多了~~"></empty>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import analogData from '../data/data.js'
+  import analogData from '../data/data'
+  import GroupA from '../components/groupA'
+  import SaleA from '../components/saleA'
+  import SpecialA from '../components/specialA'
+  import RecomA from '../components/recomA'
+  import Loading from '../components/loading'
+  import Empty from '../components/empty'
 
   export default class Index extends wepy.page {
+    components = {
+      groupA: GroupA,
+      saleA: SaleA,
+      specialA: SpecialA,
+      recomA: RecomA,
+      loading: Loading,
+      empty: Empty
+    }
+
     data = {
-      isHidden: true,
-      indicatorDots: true,
+      isHiddenLogo: true,
       indicatorActiveColor: '#fff',
       interval: 3000,
       duration: 1000,
       circular: true,
-      adList: analogData.adData
+      adList: [],
+      groupBuyList: [],
+      saleList: [],
+      specialList: [],
+      recomList: [],
+      hiddenLoading: false,
+      top: 450,
+      currentPage: 1,
+      size: 4,
+      goodsTotal: analogData.goods.length,
+      preventRepeatLoad: false,
+      hiddenEmpty: true
     }
 
     methods = {
+      // 上滑至320显示LOGO
       onPageScroll(e) {
-        if (e.scrollTop >= 220) {
-          this.isHidden = false
+        if (e.scrollTop >= 320) {
+          this.isHiddenLogo = false
         }
-        if (e.scrollTop < 220) {
-          this.isHidden = true
+        if (e.scrollTop < 320) {
+          this.isHiddenLogo = true
+        }
+      },
+      // 滑至底部加载更多
+      onReachBottom() {
+        if (!this.preventRepeatLoad) {
+          this.preventRepeatLoad = true
+          this.currentPage++
+          this.getRecomList(this.currentPage)
         }
       }
     }
 
+    // 获取轮播图数据
+    getSwiperList() {
+      let arr = []
+      analogData.adData.forEach(ele => {
+        arr.push(analogData.goods[ele.goodsId])
+      })
+      this.adList = arr
+    }
+    // 获取group sale special数据
+    getHomeGoodsList() {
+      this.groupBuyList = analogData.goods.filter((ele, i) => { return ele.activity === 'groupBuy' }).slice(0, 4)
+      this.saleList = analogData.goods.filter((ele, i) => { return ele.activity === 'sale' }).slice(0, 3)
+      this.specialList = analogData.special.filter((ele, i) => { return ele.home }).slice(0, 3)
+    }
+
+    // 获取recom数据
+    getRecomList(currentPage, size) {
+      let that = this
+      const query = {
+        page: currentPage || 1
+      }
+      let loadNum = query.page * this.size
+      // 加载更多数量超出商品总数+size，则不再请求
+      if (loadNum > (this.goodsTotal + this.size)) {
+        this.hiddenEmpty = false
+        this.preventRepeatLoad = false
+        return true
+      }
+      // 加载更多>商品总数，则加载更多=商品总数
+      if (loadNum > this.goodsTotal && loadNum < (this.goodsTotal + this.size)) loadNum = this.goodsTotal
+      this.hiddenLoading = false
+      let loadTime = Math.floor(Math.random() * 300)
+      let discpverData = []
+      discpverData = analogData.goods.sort((a, b) => { return b.salesCount - a.salesCount }).slice(0, loadNum)
+      // 模拟请求数据时间
+      setTimeout((that) => {
+        that.recomList = discpverData
+        that.hiddenLoading = true
+        that.preventRepeatLoad = false
+      }, loadTime, that)
+    }
+
+    // 获取屏幕高度
+    getWindowHeight() {
+      let that = this
+      let halfHeight = null
+      wx.getSystemInfo({
+        success: function(res) {
+          halfHeight = res.screenHeight / 2
+          that.top = halfHeight - 150
+        }
+      })
+    }
+
     onLoad() {
-      console.log('onLoad')
+      this.getSwiperList()
+      this.getHomeGoodsList()
+      this.getRecomList()
+      this.getWindowHeight()
     }
   }
 </script>

@@ -1,0 +1,120 @@
+<style scoped lang="less">
+  .item{
+    height: 200rpx;
+    padding: 20rpx;
+    margin-top: 1rpx;
+    background-color: #fff;
+    image{
+      display: block;
+      float: left;
+      margin-right: 30rpx;
+      width: 200rpx;
+      height: 200rpx;
+      border-radius: 10rpx;
+    }
+    .text{
+      width: 470rpx;
+      height: 200rpx;
+      padding: 5rpx;
+      float: left;
+    }
+  }
+  .name{
+    display: block;
+    font-size: 30rpx;
+    height: 40rpx;
+    line-height: 40rp;
+    margin-bottom: 10rpx;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .shortName{
+    color: rgb(163, 159, 159);
+    display: block;
+    font-size: 24rpx;
+    height: 24rpx;
+    line-height: 24rpx;
+    margin-bottom: 30rpx;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .price{
+    height: 80rpx;
+    view{
+      float: left;
+      width: 80rpx;
+      height: 80rpx;
+      margin-right: 80rpx;
+    }
+    view:last-child{
+      margin: 0;
+    }
+  }
+  .curPrice1{
+    display: block;
+    height: 40rpx;
+    line-height: 40rpx;
+    font-size: 30rpx;
+    font-weight: bold;
+    color: rgb(212, 0, 0);
+  }
+  .curPrice2{
+    display: block;
+    height: 40rpx;
+    line-height: 40rpx;
+    font-size: 26rpx;
+    font-weight: bold;
+    color: black;
+  }
+  .orgPrice text{
+    display: block;
+    margin: 0;
+    height: 40rpx;
+    line-height: 40rpx;
+    font-size: 24rpx;
+    color: rgb(163, 159, 159);
+  }
+  .tag text{
+    display: block;
+    height: 40rpx;
+    line-height: 40rpx;
+    font-size: 24rpx;
+    color: rgb(163, 159, 159);
+  }
+</style>
+<template>
+  <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="{{item.id}}" url="../pages/goodsdetail?code={{item.id}}" >
+    <image src="{{item.image[0]}}" />
+    <view class="text">
+      <text class="name">{{item.name}}</text>
+      <text class="shortName">{{item.shortName}}</text>
+      <view class="price">
+        <view>
+          <text class="curPrice1">￥{{item.curPrice}}</text>
+          <text class="curPrice2">底价</text>
+        </view>
+        <view class="orgPrice">
+          <text>￥{{item.orgPrice}}</text>
+          <text>原价</text>
+        </view>
+        <view class="tag">
+          <text>{{item.tag}}件</text>
+          <text>限量</text>
+        </view>
+      </view>
+    </view>
+  </navigator>
+</template>
+<script>
+import wepy from 'wepy'
+export default class SaleA extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: 'null'
+    }
+  }
+}
+</script>

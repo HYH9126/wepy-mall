@@ -1,0 +1,59 @@
+<style scoped lang="less">
+  .goBack{
+    width: 750rpx;
+    height: 90rpx;
+    padding-top: 30rpx;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    view{
+      width: 50rpx;
+      height: 45rpx;
+      padding-top: 5rpx;
+      background-color: #fff;
+      border-radius: 25rpx;
+      position: absolute;
+      top: 55rpx;
+      left: 40rpx;
+    }
+    text{
+      display: block;
+      font-size: 40rpx;
+      font-weight: bold;
+      height: 90rpx;
+      text-align: center;
+      line-height: 90rpx;
+    }
+  }
+  image{
+    width: 40rpx;
+    height: 40rpx;
+  }
+</style>
+<template>
+  <view class="goBack">
+    <view @tap="goBack">
+      <image src="../images/go-back.png" />
+    </view>
+    <text>{{message}}</text>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class NavigatorBack extends wepy.component {
+  props = {
+    pages: {
+      type: Number,
+      default: 100
+    },
+    message: String
+  }
+
+  methods = {
+    goBack() {
+      wx.navigateBack(this.pages)
+    }
+  }
+}
+</script>

@@ -1,0 +1,30 @@
+<style scoped lang="less">
+.box{
+  margin-top: 120rpx;
+}
+</style>
+<template>
+  <view class="container">
+    <navigatorBack :pages.sync="pages" message="签到有礼"></navigatorBack>
+    <view class="box">abc</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import NavigatorBack from '../components/navigatorBack'
+
+  export default class Signin extends wepy.page {
+    data = {
+      pages: null
+    }
+
+    components = {
+      navigatorBack: NavigatorBack
+    }
+
+    onLoad(options) {
+      this.pages = this.getCurrentPages().length - 1
+    }
+  }
+</script>

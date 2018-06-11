@@ -1,0 +1,63 @@
+<style scoped lang="less">
+  scroll-view{
+    width: 750rpx;
+    display: flex;
+    white-space: nowrap;
+    background-color: #fff;
+    padding: 20rpx 0;
+    view{
+      display: inline-block;
+      width: 600rpx;
+      height: 500rpx;
+      margin-right: 20rpx;
+    }
+    view:first-child{
+      margin-left: 20rpx; 
+    }
+  }
+  image{
+    width: 600rpx;
+    height: 350rpx;
+    border-radius: 10rpx;
+  }
+  .name{
+    display: block;
+    font-size: 30rpx;
+    color: #000;
+    height: 50rpx;
+    line-height: 50rpx;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .shortName{
+    display: block;
+    font-size: 24rpx;
+    color: rgb(180, 179, 179);
+    height: 50rpx;
+    line-height: 50rpx;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+<template>
+  <scroll-view scroll-x="true">
+    <view class="item" wx:for="{{list}}" wx:key="{{item.id}}">
+      <image src="{{item.image}}" />
+      <text class="name">{{item.name}}</text>
+      <text class="shortName">{{item.shortName}}</text>
+    </view>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class SpecialA extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: 'null'
+    }
+  }
+}
+</script>

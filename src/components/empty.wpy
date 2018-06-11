@@ -1,0 +1,31 @@
+<style scoped lang="less">
+.empty{
+  margin-top: 0rpx;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+  text {
+    height: 60rpx;
+    color: #666;
+    font-size: 30rpx;
+    line-height: 60rpx;
+  }
+}
+</style>
+<template>
+  <view class="empty" hidden="{{isHiddenEmpty}}">
+    <text>{{message}}</text>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Empty extends wepy.component {
+  props = {
+    isHiddenEmpty: {
+      type: Boolean,
+      default: true
+    },
+    message: String
+  }
+}
+</script>

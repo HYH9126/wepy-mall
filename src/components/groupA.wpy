@@ -1,0 +1,77 @@
+<style scoped lang="less">
+  .gbBlock{
+    height: 561rpx;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-content: space-between;
+    margin-top: 1rpx;
+    >navigator{
+      background-color: #fff;
+      height: 240rpx;
+      width: 334.9rpx;
+      padding: 20rpx;
+      position: relative;
+    }
+  }
+  .name{
+    display: block;
+    font-size: 30rpx;
+    height: 30rpx;
+    line-height: 30rpx;
+    margin-bottom: 10rpx;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .price{
+    display: block;
+    font-size: 26rpx;
+    color: rgb(155, 155, 155);
+    height: 30rpx;
+    line-height: 30rpx;
+    margin-bottom: 10rpx;
+  }
+  .tag{
+    display: block;
+    font-size: 22rpx;
+    color: #fff;
+    background-color: rgb(148, 103, 18);
+    border-radius: 4rpx;
+    height: 30rpx;
+    width: 60rpx;
+    line-height: 30rpx;
+    text-align: center;
+  }
+  .img{
+    display: block;
+    width: 180rpx;
+    height: 180rpx;
+    position: absolute;
+    bottom: 10rpx;
+    right: 10rpx;
+    border: 1rpx solid rgb(230, 230, 230);
+    border-radius: 10rpx;
+  }
+</style>
+<template>
+  <view class="gbBlock">
+    <navigator open-type="navigate" wx:for="{{list}}" wx:key="{{item.id}}" url="../pages/goodsdetail?code={{item.id}}" >
+      <text class="name">{{item.name}}</text>
+      <text class="price">{{item.curPrice}}起</text>
+      <text class="tag" wx:if="{{item.tag}}">{{item.tag}}</text>
+      <image class="img" src="{{item.image[0]}}" />
+    </navigator>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class GroupA extends wepy.component {
+  props = {
+    list: {
+      type: Object,
+      default: 'null'
+    }
+  }
+}
+</script>

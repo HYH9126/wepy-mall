@@ -1,0 +1,222 @@
+<style scoped lang="less">
+  .swiper{
+    width: 750rpx;
+    height: 750rpx;
+  }
+  .swiperImg{
+    width: 750rpx;
+    height: 750rpx;
+  }
+  .nameBlock{
+    background-color: #fff;
+    padding: 10rpx 30rpx;
+    position: relative;
+  }
+  .title{
+    font-size: 30rpx;
+    line-height: 30rpx;
+  }
+  .activity{
+    font-size: 24rpx;
+    line-height: 34rpx;
+    color: red;
+  }
+  .price{
+    font-size: 30rpx;
+    font-weight: bold;
+    line-height: 34rpx;
+    margin-top: 8rpx;
+  }
+  .priceFirst{
+    margin-right: 30rpx;
+  }
+  .price .priceRed{
+    font-size: 26rpx;
+    color: red;
+    font-weight: 400;
+    margin-left: 15rpx;
+  }
+  .salesCount{
+    height: 40rpx;;
+    margin-top: 8rpx;
+    font-size: 24rpx;
+    line-height: 34rpx;
+  }
+  .share{
+    position: absolute;
+    right: 30rpx;
+    top: 100rpx;
+    width: 80rpx;
+    height: 80rpx;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    image{
+      display: block;
+      width: 40rpx;
+      height: 40rpx;
+      margin-left: 20rpx;
+    }
+    text{
+      display: block;
+      width: 80;
+      height: 40rpx;
+      text-align: center;
+      line-height: 40rpx;
+      font-size: 22rpx;
+      color: rgb(160, 159, 159);
+    }
+  }
+  .share::after{
+    border: 0;
+    border-radius: 0;
+  }
+  .imgBlock{
+    margin-top: 20rpx;
+    background-color: #fff;
+  }
+  .button{
+    width: 750rpx;
+    height: 80rpx;
+    margin-bottom: 20rpx;
+    text{
+      display: block;
+      float: left;
+      width: 50%;
+      height: 80rpx;
+      border-bottom: 1rpx solid rgb(211, 211, 211);
+      font-size: 36rpx;
+      text-align: center;
+      line-height: 80rpx;
+      color: rgb(156, 156, 156)
+    }
+  }
+  .button .active{
+    color: rgb(189, 0, 0) ;
+    border-color: rgb(189, 0, 0);
+  }
+  .detailImg{
+    width: 750rpx;
+    margin-bottom: 10rpx;
+  }
+  .noComment{
+    height: 500rpx;
+    position: relative;
+    image{
+      width: 200rpx;
+      height: 200rpx;
+      position: absolute;
+      top: 50rpx;
+      left: 275rpx;
+    }
+    text{
+      display: block;
+      width: 200rpx;
+      height: 30rpx;
+      font-size: 22rpx;
+      color: rgb(202, 202, 202);
+      text-align: center;
+      line-height: 30rpx;
+      position: absolute;
+      top: 260rpx;
+      left: 275rpx; 
+    }
+  }
+</style>
+<template>
+  <view>
+    <navigatorBack :pages.sync="pages" message=""></navigatorBack>
+    <swiper class="swiper" indicator-dots autoplay indicator-active-color="#fff" 
+    interval="3000" duration="1000" circular="true">
+      <block wx:for="{{detailData.image}}" wx:key="{{item}}">
+        <swiper-item>
+          <image src="{{item}}" class="swiperImg"/>
+        </swiper-item>
+      </block>
+    </swiper>
+    <view class="nameBlock">
+      <text class="title">{{detailData.title}}</text>
+      <view class="activity">{{detailData.shortName}}</view>
+      <view class="price" wx:if="{{detailData.activity === 'groupBuy'}}">
+        <text class="priceFirst">零售价￥{{detailData.orgPrice}}</text>
+        <text>拼团价￥{{detailData.curPrice}}</text>
+        <text class="priceRed">(3件成团)</text>
+      </view>
+      <view class="price" wx:elif="{{detailData.activity === 'sale'}}">
+        <text class="priceFirst">原价￥{{detailData.orgPrice}}</text>
+        <text>折扣价￥{{detailData.curPrice}}</text>
+        <text class="priceRed">(限量{{detailData.tag}}件)</text>
+      </view>
+      <view class="price" wx:else>
+        <text>价格：￥{{detailData.curPrice}}</text>
+      </view>
+      <view class="salesCount">累计销量：{{detailData.salesCount}}件</view>
+      <button class="share" open-type="share" type="warn" >
+        <image src="../images/share.png" />
+        <text>分享</text>
+      </button>
+    </view>
+    <view class="imgBlock">
+      <view class="button">
+        <text class="{{checkDetailComment ? 'active' : ''}}" @tap="switchDetailComment">商品详情</text>
+        <text class="{{checkDetailComment ? '' : 'active'}}" @tap="switchDetailComment">商品评论</text>
+      </view>
+      <view class="detail" wx:if="{{checkDetailComment}}">
+        <block wx:for="{{detailData.detailImage}}" wx:key="{{item}}">
+          <image class="detailImg" mode="widthFix" src="{{item}}" />
+        </block>
+      </view>
+      <view class="comment" wx:if="{{!checkDetailComment}}">
+        <view wx:if="{{detailData.comment}}">
+
+        </view>
+        <view class="noComment" wx:else>
+          <image src="../images/noComment.png"/>
+          <text>还没有人评价</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import NavigatorBack from '../components/navigatorBack'
+import analogData from '../data/data'
+
+export default class goodsDetail extends wepy.page {
+  data = {
+    pages: 1,
+    goodsId: 0,
+    detailData: {},
+    checkDetailComment: true
+  }
+
+  components = {
+    navigatorBack: NavigatorBack
+  }
+
+  getDetailData() {
+    let that = this
+    this.detailData = analogData.goods.filter((ele, i) => { return ele.id === that.goodsId })[0]
+    console.log(this.detailData)
+  }
+
+  onShareAppMessage(res) {
+    return {
+      title: this.detailData.title,
+      path: '/page/user?id=' + this.goodsId,
+      imageUrl: this.detailData.image[0]
+    }
+  }
+
+  switchDetailComment() {
+    this.checkDetailComment = !this.checkDetailComment
+  }
+
+  onLoad(option) {
+    this.pages = this.getCurrentPages().length - 1
+    this.goodsId = option.code
+    this.getDetailData()
+  }
+}
+</script>
